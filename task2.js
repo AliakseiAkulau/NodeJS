@@ -26,5 +26,3 @@ readStream.on('error', (err) => {
 }).pipe(writeStream).on('error', (err) => {
     console.error(err.message)
 });
-
-
