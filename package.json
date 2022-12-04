@@ -1,8 +1,15 @@
 {
-  "name": "NodeJS",
+  "name": "nodejs",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/AliakseiAkulau/NodeJS.git",
   "author": "Aliaksei Akulau <aliaksei_akulau@epam.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "task1": "nodemon task1.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
