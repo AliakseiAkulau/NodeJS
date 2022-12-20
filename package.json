@@ -4,5 +4,19 @@
   "main": "index.js",
   "repository": "https://github.com/AliakseiAkulau/NodeJS.git",
   "author": "Aliaksei Akulau <aliaksei_akulau@epam.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "task1": "nodemon task1.js",
+    "task2": "nodemon task2.js",
+    "task3": "nodemon --exec babel-node task2.js"
+  },
+  "devDependencies": {
+    "csvtojson": "^2.0.10",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5"
+  }
 }
