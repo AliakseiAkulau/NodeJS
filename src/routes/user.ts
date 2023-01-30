@@ -1,26 +1,25 @@
 import express, { Request, Response } from 'express';
-import { createUser, deleteUser, getAutoSuggestUsers, getUser, getUsers, updateUser } from '../models/user';
 import { validateSchema } from '../utils/validateSchema';
-import { userSchema } from '../utils/userSchema';
+import { userSchema } from '../models/user';
 import { HttpCode, NOT_FOUND_ERROR } from '../constants';
+import { getUsers, getUser, addUser, updateUser, deleteUser, getAutoSuggestUsers } from '../services/user';
 
 const router = express.Router();
 
-router.get('/users', (req: Request, res: Response) => {
+router.get('/users', async (req: Request, res: Response) => {
     const { login, limit } = req.query;
 
     if (limit && login) {
-        res.json(getAutoSuggestUsers(login as string, limit as string));
+        return res.json(await getAutoSuggestUsers(login as string, limit as string));
     }
-
-    const users = getUsers();
+    const users = await getUsers();
 
     res.json(users);
 });
 
-router.get('/users/:id', (req: Request, res: Response) => {
+router.get('/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
-    const user = getUser(id);
+    const user = await getUser(id);
 
     if (user) {
         res.json(user);
@@ -29,19 +28,19 @@ router.get('/users/:id', (req: Request, res: Response) => {
     }
 });
 
-router.post('/users/add', validateSchema(userSchema), (req: Request, res: Response) => {
+router.post('/users/add', validateSchema(userSchema), async (req: Request, res: Response) => {
     try {
-        const newUser = createUser(req.body);
+        const newUser = await addUser(req.body);
         res.json(newUser);
     } catch (err) {
         res.status(HttpCode.BadRequest).send((err as Error).message);
     }
 });
 
-router.put('/users/:id', validateSchema(userSchema), (req: Request, res: Response) => {
+router.put('/users/:id', validateSchema(userSchema), async (req: Request, res: Response) => {
     const { id } = req.params;
-    const updatedUser = updateUser(id, req.body);
-
+    const updatedUser = await updateUser(id, req.body);
+    console.log(updatedUser);
     if (updatedUser) {
         res.json(updatedUser);
     } else {
@@ -49,15 +48,11 @@ router.put('/users/:id', validateSchema(userSchema), (req: Request, res: Respons
     }
 });
 
-router.delete('/users/:id', (req: Request, res: Response) => {
+router.delete('/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
-    const deletedUser = deleteUser(id);
+    const deletedUser = await deleteUser(id);
 
-    if (deletedUser) {
-        res.json(deletedUser);
-    } else {
-        res.status(HttpCode.NotFound).send(NOT_FOUND_ERROR);
-    }
+    res.json(deletedUser);
 });
 
 export default router;

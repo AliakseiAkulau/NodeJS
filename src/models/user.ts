@@ -1,56 +1,25 @@
-import { User } from '../types';
-import { DB } from '../db';
-import { v4 as uuidv4 } from 'uuid';
+import { User as UserType, UserCreationAttributes } from '../types';
+import { sequelize } from '../config/database';
+import { DataTypes, ModelDefined } from 'sequelize';
+import Joi from 'joi';
 
-export const getUsers = (): User[] => DB.users.filter((user: User) => !user.isDeleted);
+export const userSchema = Joi.object().keys({
+    login: Joi.string().required(),
+    password: Joi.string().pattern(new RegExp('^(?=.*?[A-Za-z])(?=.*?[0-9])')).required(),
+    age: Joi.number().integer().min(4).max(130).required(),
+    is_deleted: Joi.boolean()
+});
 
-export const getUser = (id: string): User | undefined => DB.users.find((user) => user.id === id && !user.isDeleted);
+const UserModel: ModelDefined<UserType, UserCreationAttributes> = sequelize.define(
+    'users',
+    {
+        id: { type: DataTypes.UUIDV4, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
+        login: { type: DataTypes.STRING, unique: true, allowNull: false },
+        password: { type: DataTypes.STRING, allowNull: false },
+        age: { type: DataTypes.INTEGER, allowNull: false },
+        is_deleted: { type: DataTypes.BOOLEAN, defaultValue: false }
+    },
+    { createdAt: false, updatedAt: false }
+);
 
-export const createUser = (user: User): User => {
-    const newUser = {
-        ...user,
-        isDeleted: false,
-        id: uuidv4()
-    };
-    DB.users.push(newUser);
-
-    return newUser;
-};
-
-export const updateUser = (id: string, user: User): User | undefined => {
-    const currentUserIndex = DB.users.findIndex((item) => item.id === id);
-
-    if (currentUserIndex === -1 || DB.users[currentUserIndex].isDeleted) {
-        return;
-    }
-
-    DB.users[currentUserIndex] = { ...DB.users[currentUserIndex], ...user };
-
-    return DB.users[currentUserIndex];
-};
-
-export const deleteUser = (id: string) => {
-    const currentUserIndex = DB.users.findIndex((item) => item.id === id);
-
-    if (currentUserIndex === -1) return;
-
-    DB.users[currentUserIndex].isDeleted = true;
-
-    return DB.users[currentUserIndex];
-};
-
-export const getAutoSuggestUsers = (logSubString: string, limit: string): User[] => {
-    const suggestedUsers: User[] = DB.users.filter(
-        (user) => !user.isDeleted && user.login?.toLowerCase().includes(logSubString.toLowerCase())
-    );
-
-    suggestedUsers.sort((a: User, b: User): number => {
-        if (a.login > b.login) {
-            return 1;
-        } else if (a.login < b.login) {
-            return -1;
-        }
-        return 0;
-    });
-    return suggestedUsers.slice(0, +limit);
-};
+export default UserModel;
