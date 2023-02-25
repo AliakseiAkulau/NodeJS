@@ -40,7 +40,6 @@ router.post('/users/add', validateSchema(userSchema), async (req: Request, res: 
 router.put('/users/:id', validateSchema(userSchema), async (req: Request, res: Response) => {
     const { id } = req.params;
     const updatedUser = await updateUser(id, req.body);
-    console.log(updatedUser);
     if (updatedUser) {
         res.json(updatedUser);
     } else {
