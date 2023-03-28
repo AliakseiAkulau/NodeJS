@@ -34,3 +34,6 @@ export const getAutoSuggestUsers = async (
         limit,
         order: ['login']
     });
+
+export const getUserDB = async (login: string): Promise<Model<UserType, UserCreationAttributes> | null> =>
+    await UserModel.findOne({ where: { login } });

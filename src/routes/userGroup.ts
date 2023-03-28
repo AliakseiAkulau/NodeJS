@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { validateSchema } from '../utils/validateSchema';
 import { userGroupSchema } from '../models/userGroup';
 import { addUsersToGroup, getUserGroup } from '../services/userGroup';
-import { HttpCode, NOT_FOUND_ERROR } from '../constants';
+import { HTTP_CODE, NOT_FOUND_ERROR } from '../constants';
 
 const userGroupRouter = express.Router();
 
@@ -11,7 +11,7 @@ userGroupRouter.get('/user_group', async (req: Request, res: Response) => {
         const userGroup = await getUserGroup();
         res.json(userGroup);
     } catch (err) {
-        res.status(HttpCode.NotFound).send(NOT_FOUND_ERROR);
+        res.status(HTTP_CODE.NOT_FOUND).send(NOT_FOUND_ERROR);
     }
 });
 
@@ -21,7 +21,7 @@ userGroupRouter.post('/user_group/add', validateSchema(userGroupSchema), async (
         const userGroup = await addUsersToGroup(groupId, userIds);
         res.json(userGroup);
     } catch (err) {
-        res.status(HttpCode.BadRequest).send((err as Error).message);
+        res.status(HTTP_CODE.BAD_REQUEST).send((err as Error).message);
     }
 });
 

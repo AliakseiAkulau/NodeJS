@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validateSchema } from '../utils/validateSchema';
 import { userSchema } from '../models/user';
-import { HttpCode, NOT_FOUND_ERROR } from '../constants';
+import { HTTP_CODE, NOT_FOUND_ERROR } from '../constants';
 import { getUsers, getUser, addUser, updateUser, deleteUser, getAutoSuggestUsers } from '../services/user';
 
 const router = express.Router();
@@ -24,7 +24,7 @@ router.get('/users/:id', async (req: Request, res: Response) => {
     if (user) {
         res.json(user);
     } else {
-        res.status(HttpCode.NotFound).send(NOT_FOUND_ERROR);
+        res.status(HTTP_CODE.NOT_FOUND).send(NOT_FOUND_ERROR);
     }
 });
 
@@ -33,7 +33,7 @@ router.post('/users/add', validateSchema(userSchema), async (req: Request, res: 
         const newUser = await addUser(req.body);
         res.json(newUser);
     } catch (err) {
-        res.status(HttpCode.BadRequest).send((err as Error).message);
+        res.status(HTTP_CODE.BAD_REQUEST).send((err as Error).message);
     }
 });
 
@@ -43,7 +43,7 @@ router.put('/users/:id', validateSchema(userSchema), async (req: Request, res: R
     if (updatedUser) {
         res.json(updatedUser);
     } else {
-        res.status(HttpCode.NotFound).send(NOT_FOUND_ERROR);
+        res.status(HTTP_CODE.NOT_FOUND).send(NOT_FOUND_ERROR);
     }
 });
 
