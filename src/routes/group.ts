@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { groupSchema } from '../models/group';
 import { addGroup, deleteGroup, getGroup, getGroups, updateGroup } from '../services/group';
 import { validateSchema } from '../utils/validateSchema';
-import { HttpCode, NOT_FOUND_ERROR } from '../constants';
+import { HTTP_CODE, NOT_FOUND_ERROR } from '../constants';
 
 const groupRouter = express.Router();
 
@@ -24,7 +24,7 @@ groupRouter.post('/groups/add', validateSchema(groupSchema), async (req: Request
         const newGroups = await addGroup(req.body);
         res.json(newGroups);
     } catch (err) {
-        res.status(HttpCode.BadRequest).send((err as Error).message);
+        res.status(HTTP_CODE.BAD_REQUEST).send((err as Error).message);
     }
 });
 
@@ -35,7 +35,7 @@ groupRouter.put('/groups/:id', validateSchema(groupSchema), async (req: Request,
     if (updatedGroup) {
         res.json(updatedGroup);
     } else {
-        res.status(HttpCode.NotFound).send(NOT_FOUND_ERROR);
+        res.status(HTTP_CODE.NOT_FOUND).send(NOT_FOUND_ERROR);
     }
 });
 

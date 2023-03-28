@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
-import { HttpCode } from '../constants';
+import { HTTP_CODE } from '../constants';
 const errorResponse = (schemaErrors: Joi.ValidationError) => {
     const errors = schemaErrors.details.map((error) => {
         const { path, message } = error;
@@ -20,7 +20,7 @@ export const validateSchema = (schema: Joi.ObjectSchema<any>) => {
         });
 
         if (error?.isJoi) {
-            res.status(HttpCode.BadRequest).json(errorResponse(error));
+            res.status(HTTP_CODE.BAD_REQUEST).json(errorResponse(error));
         } else {
             next();
         }

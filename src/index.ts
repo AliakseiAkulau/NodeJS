@@ -7,6 +7,9 @@ import userGroup from './routes/userGroup';
 import { PORT } from './constants';
 import { sequelize } from './config/database';
 import { errorHandler, logger, morganMiddleware } from './logger';
+import { authorization } from './middleware/authorization';
+import loginRouter from './routes/login';
+import cors from 'cors';
 
 const app = express();
 
@@ -21,10 +24,19 @@ process
     });
 app.use(express.json());
 app.use(morganMiddleware);
+app.use(cors());
+app.use((req, res, next) => {
+    if (req.url === '/login') {
+        next();
+    } else {
+        authorization(req, res, next);
+    }
+});
 app.use(userRouter);
 app.use(groupRouter);
 app.use(userGroup);
 app.use(errorHandler);
+app.use(loginRouter);
 
 app.listen(PORT, async () => {
     try {
