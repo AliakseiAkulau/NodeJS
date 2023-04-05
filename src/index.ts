@@ -7,7 +7,7 @@ import userGroup from './routes/userGroup';
 import { PORT } from './constants';
 import { sequelize } from './config/database';
 import { errorHandler, logger, morganMiddleware } from './logger';
-import { authorization } from './middleware/authorization';
+import authorization from './middleware/authorization';
 import loginRouter from './routes/login';
 import cors from 'cors';
 
@@ -38,7 +38,7 @@ app.use(userGroup);
 app.use(errorHandler);
 app.use(loginRouter);
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
     try {
         await sequelize.authenticate();
         logger.info('successful db connection');
@@ -47,3 +47,5 @@ app.listen(PORT, async () => {
     }
     logger.info(`Server is listening on port ${PORT}`);
 });
+
+export default server;

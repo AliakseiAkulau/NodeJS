@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { HTTP_CODE } from '../constants';
 import 'dotenv/config';
 
-export const authorization = ({ headers }: Request, res: Response, next: NextFunction) => {
+const authorization = ({ headers }: Request, res: Response, next: NextFunction) => {
     const token = headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -16,3 +16,5 @@ export const authorization = ({ headers }: Request, res: Response, next: NextFun
         next();
     });
 };
+
+export default authorization;
