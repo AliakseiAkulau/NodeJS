@@ -23,7 +23,8 @@ const UserGroup: ModelDefined<UserGroupAttributes, UserGroupCreationAttributes> 
     },
     {
         createdAt: false,
-        updatedAt: false
+        updatedAt: false,
+        freezeTableName: true
     }
 );
 

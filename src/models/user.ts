@@ -19,7 +19,7 @@ const UserModel: ModelDefined<UserType, UserCreationAttributes> = sequelize.defi
         age: { type: DataTypes.INTEGER, allowNull: false },
         is_deleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
-    { createdAt: false, updatedAt: false }
+    { createdAt: false, updatedAt: false, freezeTableName: true }
 );
 
 export default UserModel;

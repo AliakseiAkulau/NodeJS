@@ -21,7 +21,7 @@ const Group: ModelDefined<GroupAttributes, GroupCreationAttributes> = sequelize.
         name: { type: DataTypes.STRING, unique: true },
         permissions: DataTypes.ARRAY(DataTypes.STRING)
     },
-    { createdAt: false, updatedAt: false }
+    { createdAt: false, updatedAt: false, freezeTableName: true }
 );
 
 export default Group;
